@@ -11,7 +11,8 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "cypress": "cypress open",
-    "export": "next build && next export"
+    "export": "next build && next export",
+    "codegen": "graphql-codegen --config graphql.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -19,6 +20,8 @@
     "@nextui-org/react": "^1.0.4-beta.5",
     "@prisma/client": "^4.8.1",
     "core": "0.0.1",
+    "graphql": "^16.6.0",
+    "graphql-yoga": "^3.3.0",
     "gray-matter": "^4.0.3",
     "jest": "^28.1.1",
     "jest-environment-jsdom": "^28.1.1",
@@ -40,11 +43,16 @@
     "unified": "^10.1.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.16.4",
+    "@graphql-codegen/client-preset": "^1.2.6",
+    "@graphql-codegen/introspection": "^2.2.3",
+    "@graphql-codegen/typescript-resolvers": "^2.7.12",
     "compression-webpack-plugin": "^9.2.0",
     "config": "1.0.0",
     "cypress": "^10.1.0",
     "intersection-observer": "^0.12.2",
     "next-transpile-modules": "^9.0.0",
+    "ts-node": "^10.9.1",
     "tsconfig": "0.0.0"
   }
 }

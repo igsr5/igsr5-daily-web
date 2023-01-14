@@ -25,5 +25,5 @@ export const resolvers: Resolvers = {
     name: category => category.name,
     posts: async category => await getPostsByCategoryId(category.id),
   },
-  Date: DateTimeResolver,
+  DateTime: DateTimeResolver,
 };

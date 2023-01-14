@@ -1,4 +1,4 @@
-scalar Date
+scalar DateTime
 
 type Query {
   """
@@ -36,7 +36,7 @@ type Post {
   subtitle: String
   content: String!
   category: Category
-  published_at: Date!
+  published_at: DateTime!
 }
 
 type Category {

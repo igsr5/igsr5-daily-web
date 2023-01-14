@@ -13,14 +13,26 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  users: Array<User>;
+export type Category = {
+  __typename?: 'Category';
+  id?: Maybe<Scalars['ID']>;
+  name: Scalars['String'];
+  posts?: Maybe<Array<Post>>;
 };
 
-export type User = {
-  __typename?: 'User';
-  name?: Maybe<Scalars['String']>;
+export type Post = {
+  __typename?: 'Post';
+  category?: Maybe<Category>;
+  content: Scalars['String'];
+  id: Scalars['ID'];
+  published_at: Scalars['String'];
+  subtitle?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  posts?: Maybe<Array<Post>>;
 };
 
 
@@ -93,30 +105,47 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Category: ResolverTypeWrapper<Category>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
-  User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Category: Category;
+  ID: Scalars['ID'];
+  Post: Post;
   Query: {};
   String: Scalars['String'];
-  User: User;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-};
-
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type CategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
+  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  published_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  subtitle?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
+  Category?: CategoryResolvers<ContextType>;
+  Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
 };
 

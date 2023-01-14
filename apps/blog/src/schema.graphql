@@ -1,7 +1,18 @@
 type Query {
-  users: [User!]!
+  posts: [Post!]
 }
 
-type User {
-  name: String
+type Post {
+  id: ID!
+  title: String!
+  subtitle: String
+  content: String!
+  category: Category
+  published_at: String!
+}
+
+type Category {
+  id: ID
+  name: String!
+  posts: [Post!]
 }

@@ -13,12 +13,24 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  users: Array<User>;
+export type Category = {
+  __typename?: 'Category';
+  id?: Maybe<Scalars['ID']>;
+  name: Scalars['String'];
+  posts?: Maybe<Array<Post>>;
 };
 
-export type User = {
-  __typename?: 'User';
-  name?: Maybe<Scalars['String']>;
+export type Post = {
+  __typename?: 'Post';
+  category?: Maybe<Category>;
+  content: Scalars['String'];
+  id: Scalars['ID'];
+  published_at: Scalars['String'];
+  subtitle?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  posts?: Maybe<Array<Post>>;
 };

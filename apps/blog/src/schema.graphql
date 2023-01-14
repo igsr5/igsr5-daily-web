@@ -1,0 +1,97 @@
+scalar DateTime
+
+type Query {
+  """
+  get a list of posts
+  """
+  posts(
+    """
+    The maximum number of posts to return
+    """
+    limit: Int
+
+    """
+    The order by input for the posts
+    """
+    orderBy: OrderByInputForPost
+
+    """
+    The offset to use for pagination
+    """
+    offset: Int
+  ): [Post!]
+
+  """
+  get a post by id
+  """
+  post(id: Int!): Post
+
+  """
+  get a list of categories
+  """
+  categories: [Category!]
+
+  """
+  get a category by id
+  """
+  category(id: Int!): Category
+}
+
+type Mutation {
+  """
+  create a post.
+  If the post is the first post in this month, a new category will be created
+  """
+  createPost(input: CreatePostInput): Post
+}
+
+"""
+A post in a blog
+"""
+type Post {
+  id: Int!
+  title: String!
+  subtitle: String
+  content: String!
+  category_id: Int
+  category: Category
+  published_at: DateTime!
+}
+
+type Category {
+  id: Int
+  name: String!
+  posts: [Post!]
+}
+
+enum Sort {
+  asc
+  desc
+}
+
+enum AllowOrderField {
+  id
+  published_at
+}
+
+input OrderByInputForPost {
+  field: AllowOrderField!
+  order: Sort!
+}
+
+input CreatePostInput {
+  """
+  The title of the post
+  """
+  title: String!
+
+  """
+  The subtitle of the post
+  """
+  subtitle: String
+
+  """
+  The content of the post
+  """
+  content: String!
+}

@@ -13,6 +13,11 @@ export type Scalars = {
   Float: number;
 };
 
+export enum AllowOrderField {
+  Id = 'id',
+  PublishedAt = 'published_at'
+}
+
 export type Category = {
   __typename?: 'Category';
   id?: Maybe<Scalars['ID']>;
@@ -20,6 +25,12 @@ export type Category = {
   posts?: Maybe<Array<Post>>;
 };
 
+export type OrderByInputForPost = {
+  field: AllowOrderField;
+  order: Sort;
+};
+
+/** A post in a blog */
 export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
@@ -34,3 +45,15 @@ export type Query = {
   __typename?: 'Query';
   posts?: Maybe<Array<Post>>;
 };
+
+
+export type QueryPostsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<OrderByInputForPost>;
+};
+
+export enum Sort {
+  Asc = 'asc',
+  Desc = 'desc'
+}

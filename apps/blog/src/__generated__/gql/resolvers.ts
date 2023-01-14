@@ -13,6 +13,11 @@ export type Scalars = {
   Float: number;
 };
 
+export enum AllowOrderField {
+  Id = 'id',
+  PublishedAt = 'published_at'
+}
+
 export type Category = {
   __typename?: 'Category';
   id?: Maybe<Scalars['ID']>;
@@ -20,6 +25,12 @@ export type Category = {
   posts?: Maybe<Array<Post>>;
 };
 
+export type OrderByInputForPost = {
+  field: AllowOrderField;
+  order: Sort;
+};
+
+/** A post in a blog */
 export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
@@ -34,6 +45,18 @@ export type Query = {
   __typename?: 'Query';
   posts?: Maybe<Array<Post>>;
 };
+
+
+export type QueryPostsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<OrderByInputForPost>;
+};
+
+export enum Sort {
+  Asc = 'asc',
+  Desc = 'desc'
+}
 
 
 
@@ -104,11 +127,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AllowOrderField: AllowOrderField;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  OrderByInputForPost: OrderByInputForPost;
   Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
+  Sort: Sort;
   String: ResolverTypeWrapper<Scalars['String']>;
 };
 
@@ -117,6 +144,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Category: Category;
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
+  OrderByInputForPost: OrderByInputForPost;
   Post: Post;
   Query: {};
   String: Scalars['String'];
@@ -140,7 +169,7 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, Partial<QueryPostsArgs>>;
 };
 
 export type Resolvers<ContextType = any> = {

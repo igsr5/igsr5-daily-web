@@ -1,7 +1,25 @@
 type Query {
-  posts: [Post!]
+  posts(
+    """
+    The maximum number of posts to return
+    """
+    limit: Int
+
+    """
+    The order by input for the posts
+    """
+    orderBy: OrderByInputForPost
+
+    """
+    The offset to use for pagination
+    """
+    offset: Int
+  ): [Post!]
 }
 
+"""
+A post in a blog
+"""
 type Post {
   id: ID!
   title: String!
@@ -15,4 +33,19 @@ type Category {
   id: ID
   name: String!
   posts: [Post!]
+}
+
+enum Sort {
+  asc
+  desc
+}
+
+enum AllowOrderField {
+  id
+  published_at
+}
+
+input OrderByInputForPost {
+  field: AllowOrderField!
+  order: Sort!
 }

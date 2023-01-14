@@ -59,6 +59,7 @@ export type OrderByInputForPost = {
 export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
+  category_id?: Maybe<Scalars['Int']>;
   content: Scalars['String'];
   id: Scalars['Int'];
   published_at: Scalars['DateTime'];
@@ -214,6 +215,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
+  category_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   published_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;

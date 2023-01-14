@@ -58,6 +58,7 @@ export type OrderByInputForPost = {
 export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
+  category_id?: Maybe<Scalars['Int']>;
   content: Scalars['String'];
   id: Scalars['Int'];
   published_at: Scalars['DateTime'];

@@ -7,7 +7,8 @@ import {
   QueryResolvers,
   Resolvers,
 } from '../__generated__/gql/resolvers';
-import { createCategory, getCategories, getCategoryById, getCategoryByName, getCategoryByPostId } from './db/category';
+import { categoryLoader } from './dataloaders/category_loader';
+import { createCategory, getCategories, getCategoryById, getCategoryByName } from './db/category';
 import { createPost, getPost, getPosts, getPostsByCategoryId } from './db/post';
 import { calculateCategoryName } from './utils';
 
@@ -16,7 +17,10 @@ const postResolvers: PostResolvers = {
   title: post => post.title,
   published_at: post => post.published_at,
   subtitle: post => post.subtitle,
-  category: async post => await getCategoryByPostId(post.id),
+  category_id: post => post.category_id,
+  category: async post => {
+    return categoryLoader.load(post.category_id);
+  },
 };
 
 const categoryResolvers: CategoryResolvers = {

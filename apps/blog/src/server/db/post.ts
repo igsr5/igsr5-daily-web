@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { Post, PrismaClient } from '@prisma/client';
 
-type GetPostsOption = { limit?: number; orderBy?: { field: string; order: 'asc' | 'desc' }; offset?: number };
+type GetPostsOption = { limit: number; orderBy: { field: string; order: 'asc' | 'desc' }; offset: number };
 
-export const getPosts = async (opts: GetPostsOption) => {
+export const getPosts = async (opts: Partial<GetPostsOption>): Promise<Post[]> => {
   const { limit, orderBy, offset } = opts;
   const prisma = new PrismaClient();
 

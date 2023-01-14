@@ -20,6 +20,7 @@
     "@nextui-org/react": "^1.0.4-beta.5",
     "@prisma/client": "^4.8.1",
     "core": "0.0.1",
+    "dataloader": "^2.1.0",
     "graphql": "^16.6.0",
     "graphql-scalars": "^1.20.1",
     "graphql-yoga": "^3.3.0",

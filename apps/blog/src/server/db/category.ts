@@ -1,8 +1,15 @@
 import { Category, PrismaClient } from '@prisma/client';
 
-export const getCategories = async () => {
+type GetCategoriesOption = { in: { ids: number[] } };
+export const getCategories = async (opts?: Partial<GetCategoriesOption>) => {
   const prisma = new PrismaClient();
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.category.findMany({
+    where: {
+      id: {
+        in: opts.in.ids,
+      },
+    },
+  });
   return categories;
 };
 
@@ -24,19 +31,6 @@ export const getCategoryByName = async (name: string): Promise<Category | null> 
     },
   });
   return category;
-};
-
-export const getCategoryByPostId = async (postId: number): Promise<Category | null> => {
-  const prisma = new PrismaClient();
-  const post = await prisma.post.findUnique({
-    where: {
-      id: Number(postId),
-    },
-    include: {
-      Category: true,
-    },
-  });
-  return post.Category;
 };
 
 export const createCategory = async (name: string): Promise<Category> => {

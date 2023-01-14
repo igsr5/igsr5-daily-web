@@ -53,6 +53,7 @@ type Post {
   title: String!
   subtitle: String
   content: String!
+  category_id: Int
   category: Category
   published_at: DateTime!
 }

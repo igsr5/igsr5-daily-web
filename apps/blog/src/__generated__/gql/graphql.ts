@@ -26,6 +26,29 @@ export type Category = {
   posts?: Maybe<Array<Post>>;
 };
 
+export type CreatePostInput = {
+  /** The content of the post */
+  content: Scalars['String'];
+  /** The subtitle of the post */
+  subtitle?: InputMaybe<Scalars['String']>;
+  /** The title of the post */
+  title: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  /**
+   * create a post.
+   * If the post is the first post in this month, a new category will be created
+   */
+  createPost?: Maybe<Post>;
+};
+
+
+export type MutationCreatePostArgs = {
+  input?: InputMaybe<CreatePostInput>;
+};
+
 export type OrderByInputForPost = {
   field: AllowOrderField;
   order: Sort;

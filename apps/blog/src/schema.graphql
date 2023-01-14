@@ -37,6 +37,14 @@ type Query {
   category(id: Int!): Category
 }
 
+type Mutation {
+  """
+  create a post.
+  If the post is the first post in this month, a new category will be created
+  """
+  createPost(input: CreatePostInput): Post
+}
+
 """
 A post in a blog
 """
@@ -68,4 +76,21 @@ enum AllowOrderField {
 input OrderByInputForPost {
   field: AllowOrderField!
   order: Sort!
+}
+
+input CreatePostInput {
+  """
+  The title of the post
+  """
+  title: String!
+
+  """
+  The subtitle of the post
+  """
+  subtitle: String
+
+  """
+  The content of the post
+  """
+  content: String!
 }

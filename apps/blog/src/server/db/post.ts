@@ -34,3 +34,26 @@ export const getPostsByCategoryId = async (categoryId: number) => {
 
   return posts;
 };
+
+type CreatePostInput = {
+  title: string;
+  subtitle?: string;
+  content: string;
+  publishedAt: Date;
+  categoryId: number;
+};
+
+export const createPost = async (input: CreatePostInput) => {
+  const prisma = new PrismaClient();
+  const post = await prisma.post.create({
+    data: {
+      title: input.title,
+      subtitle: input.subtitle,
+      content: input.content,
+      published_at: input.publishedAt,
+      category_id: input.categoryId,
+    },
+  });
+
+  return post;
+};

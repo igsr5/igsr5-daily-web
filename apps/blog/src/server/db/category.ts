@@ -6,7 +6,7 @@ export const getCategories = async () => {
   return categories;
 };
 
-export const getCategoryById = async (id: number) => {
+export const getCategoryById = async (id: number): Promise<Category | null> => {
   const prisma = new PrismaClient();
   const category = await prisma.category.findUnique({
     where: {
@@ -16,7 +16,17 @@ export const getCategoryById = async (id: number) => {
   return category;
 };
 
-export const getCategoryByPostId = async (postId: number): Promise<Category> => {
+export const getCategoryByName = async (name: string): Promise<Category | null> => {
+  const prisma = new PrismaClient();
+  const category = await prisma.category.findUnique({
+    where: {
+      name,
+    },
+  });
+  return category;
+};
+
+export const getCategoryByPostId = async (postId: number): Promise<Category | null> => {
   const prisma = new PrismaClient();
   const post = await prisma.post.findUnique({
     where: {
@@ -27,4 +37,14 @@ export const getCategoryByPostId = async (postId: number): Promise<Category> => 
     },
   });
   return post.Category;
+};
+
+export const createCategory = async (name: string): Promise<Category> => {
+  const prisma = new PrismaClient();
+  const category = await prisma.category.create({
+    data: {
+      name,
+    },
+  });
+  return category;
 };

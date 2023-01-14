@@ -27,6 +27,29 @@ export type Category = {
   posts?: Maybe<Array<Post>>;
 };
 
+export type CreatePostInput = {
+  /** The content of the post */
+  content: Scalars['String'];
+  /** The subtitle of the post */
+  subtitle?: InputMaybe<Scalars['String']>;
+  /** The title of the post */
+  title: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  /**
+   * create a post.
+   * If the post is the first post in this month, a new category will be created
+   */
+  createPost?: Maybe<Post>;
+};
+
+
+export type MutationCreatePostArgs = {
+  input?: InputMaybe<CreatePostInput>;
+};
+
 export type OrderByInputForPost = {
   field: AllowOrderField;
   order: Sort;
@@ -149,8 +172,10 @@ export type ResolversTypes = {
   AllowOrderField: AllowOrderField;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
+  CreatePostInput: CreatePostInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Mutation: ResolverTypeWrapper<{}>;
   OrderByInputForPost: OrderByInputForPost;
   Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
@@ -162,8 +187,10 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Category: Category;
+  CreatePostInput: CreatePostInput;
   DateTime: Scalars['DateTime'];
   Int: Scalars['Int'];
+  Mutation: {};
   OrderByInputForPost: OrderByInputForPost;
   Post: Post;
   Query: {};
@@ -180,6 +207,10 @@ export type CategoryResolvers<ContextType = any, ParentType extends ResolversPar
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, Partial<MutationCreatePostArgs>>;
+};
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
@@ -201,6 +232,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type Resolvers<ContextType = any> = {
   Category?: CategoryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };

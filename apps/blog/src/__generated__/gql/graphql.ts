@@ -11,6 +11,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
 };
 
 export enum AllowOrderField {
@@ -20,7 +21,7 @@ export enum AllowOrderField {
 
 export type Category = {
   __typename?: 'Category';
-  id?: Maybe<Scalars['ID']>;
+  id?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   posts?: Maybe<Array<Post>>;
 };
@@ -35,8 +36,8 @@ export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
   content: Scalars['String'];
-  id: Scalars['ID'];
-  published_at: Scalars['String'];
+  id: Scalars['Int'];
+  published_at: Scalars['Date'];
   subtitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
@@ -51,7 +52,7 @@ export type Query = {
 
 
 export type QueryPostArgs = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 

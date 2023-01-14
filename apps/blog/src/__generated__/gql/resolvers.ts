@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -12,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
 };
 
 export enum AllowOrderField {
@@ -21,7 +22,7 @@ export enum AllowOrderField {
 
 export type Category = {
   __typename?: 'Category';
-  id?: Maybe<Scalars['ID']>;
+  id?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   posts?: Maybe<Array<Post>>;
 };
@@ -36,8 +37,8 @@ export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
   content: Scalars['String'];
-  id: Scalars['ID'];
-  published_at: Scalars['String'];
+  id: Scalars['Int'];
+  published_at: Scalars['Date'];
   subtitle?: Maybe<Scalars['String']>;
   title: Scalars['String'];
 };
@@ -52,7 +53,7 @@ export type Query = {
 
 
 export type QueryPostArgs = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 
@@ -139,7 +140,7 @@ export type ResolversTypes = {
   AllowOrderField: AllowOrderField;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   OrderByInputForPost: OrderByInputForPost;
   Post: ResolverTypeWrapper<Post>;
@@ -152,7 +153,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Category: Category;
-  ID: Scalars['ID'];
+  Date: Scalars['Date'];
   Int: Scalars['Int'];
   OrderByInputForPost: OrderByInputForPost;
   Post: Post;
@@ -161,17 +162,21 @@ export type ResolversParentTypes = {
 };
 
 export type CategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
+
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  published_at?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  published_at?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   subtitle?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -184,6 +189,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type Resolvers<ContextType = any> = {
   Category?: CategoryResolvers<ContextType>;
+  Date?: GraphQLScalarType;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };

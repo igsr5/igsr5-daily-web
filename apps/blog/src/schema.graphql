@@ -1,3 +1,5 @@
+scalar Date
+
 type Query {
   """
   get a list of posts
@@ -22,23 +24,23 @@ type Query {
   """
   get a post by id
   """
-  post(id: ID!): Post
+  post(id: Int!): Post
 }
 
 """
 A post in a blog
 """
 type Post {
-  id: ID!
+  id: Int!
   title: String!
   subtitle: String
   content: String!
   category: Category
-  published_at: String!
+  published_at: Date!
 }
 
 type Category {
-  id: ID
+  id: Int
   name: String!
   posts: [Post!]
 }

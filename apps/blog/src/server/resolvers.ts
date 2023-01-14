@@ -1,18 +1,26 @@
 import { Resolvers } from '../__generated__/gql/resolvers';
-import { getPost, getPosts } from './db';
-import { serializePost } from './utils';
+import { getCategoryByPostId } from './db/category';
+import { getPost, getPosts, getPostsByCategoryId } from './db/post';
 
 export const resolvers: Resolvers = {
   Query: {
     async posts(_parent, args) {
-      const { limit, orderBy, offset } = args;
-      const posts = await getPosts({ limit, orderBy, offset });
-      return posts.map(post => serializePost(post));
+      return await getPosts(args);
     },
     async post(_parent, args) {
-      const { id } = args;
-      const post = await getPost(id);
-      return serializePost(post);
+      return await getPost(args.id);
     },
+  },
+  Post: {
+    id: post => post.id,
+    title: post => post.title,
+    published_at: post => post.published_at,
+    subtitle: post => post.subtitle,
+    category: async post => await getCategoryByPostId(post.id),
+  },
+  Category: {
+    id: category => category.id,
+    name: category => category.name,
+    posts: async category => await getPostsByCategoryId(category.id),
   },
 };

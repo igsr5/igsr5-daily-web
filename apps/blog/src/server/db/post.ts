@@ -12,18 +12,25 @@ export const getPosts = async (opts: GetPostsOption) => {
   const posts = await prisma.post.findMany({
     take: limit,
     skip: offset,
-    include: { Category: true },
     orderBy: [orderByMap],
   });
   return posts;
 };
 
-export const getPost = async (id: string) => {
+export const getPost = async (id: number) => {
   const prisma = new PrismaClient();
   const post = await prisma.post.findUnique({
-    where: { id: Number(id) },
-    include: { Category: true },
+    where: { id },
   });
 
   return post;
+};
+
+export const getPostsByCategoryId = async (categoryId: number) => {
+  const prisma = new PrismaClient();
+  const posts = await prisma.post.findMany({
+    where: { category_id: categoryId },
+  });
+
+  return posts;
 };

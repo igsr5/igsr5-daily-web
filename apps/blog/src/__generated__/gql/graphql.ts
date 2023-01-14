@@ -44,10 +44,19 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
+  /** get a list of categories */
+  categories?: Maybe<Array<Category>>;
+  /** get a category by id */
+  category?: Maybe<Category>;
   /** get a post by id */
   post?: Maybe<Post>;
   /** get a list of posts */
   posts?: Maybe<Array<Post>>;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['Int'];
 };
 
 

@@ -25,6 +25,16 @@ type Query {
   get a post by id
   """
   post(id: Int!): Post
+
+  """
+  get a list of categories
+  """
+  categories: [Category!]
+
+  """
+  get a category by id
+  """
+  category(id: Int!): Category
 }
 
 """

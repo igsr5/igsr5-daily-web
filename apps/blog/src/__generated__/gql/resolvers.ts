@@ -45,10 +45,19 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
+  /** get a list of categories */
+  categories?: Maybe<Array<Category>>;
+  /** get a category by id */
+  category?: Maybe<Category>;
   /** get a post by id */
   post?: Maybe<Post>;
   /** get a list of posts */
   posts?: Maybe<Array<Post>>;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -183,6 +192,8 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
+  category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType, RequireFields<QueryCategoryArgs, 'id'>>;
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
   posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType, Partial<QueryPostsArgs>>;
 };

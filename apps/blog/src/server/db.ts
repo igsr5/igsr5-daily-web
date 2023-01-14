@@ -17,3 +17,13 @@ export const getPosts = async (opts: GetPostsOption) => {
   });
   return posts;
 };
+
+export const getPost = async (id: string) => {
+  const prisma = new PrismaClient();
+  const post = await prisma.post.findUnique({
+    where: { id: Number(id) },
+    include: { Category: true },
+  });
+
+  return post;
+};

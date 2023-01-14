@@ -1,6 +1,5 @@
-import { Post } from '../__generated__/gql/graphql';
 import { Resolvers } from '../__generated__/gql/resolvers';
-import { getPosts } from './db';
+import { getPost, getPosts } from './db';
 import { serializePost } from './utils';
 
 export const resolvers: Resolvers = {
@@ -8,9 +7,12 @@ export const resolvers: Resolvers = {
     async posts(_parent, args) {
       const { limit, orderBy, offset } = args;
       const posts = await getPosts({ limit, orderBy, offset });
-      const returnPosts: Post[] = posts.map(post => serializePost(post));
-
-      return returnPosts;
+      return posts.map(post => serializePost(post));
+    },
+    async post(_parent, args) {
+      const { id } = args;
+      const post = await getPost(id);
+      return serializePost(post);
     },
   },
 };

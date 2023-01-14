@@ -1,4 +1,7 @@
 type Query {
+  """
+  get a list of posts
+  """
   posts(
     """
     The maximum number of posts to return
@@ -15,6 +18,11 @@ type Query {
     """
     offset: Int
   ): [Post!]
+
+  """
+  get a post by id
+  """
+  post(id: ID!): Post
 }
 
 """

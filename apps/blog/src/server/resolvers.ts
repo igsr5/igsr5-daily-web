@@ -19,7 +19,7 @@ const postResolvers: PostResolvers = {
   subtitle: post => post.subtitle,
   category_id: post => post.category_id,
   category: async post => {
-    return categoryLoader.load(post.category_id);
+    return await categoryLoader.load(post.category_id);
   },
 };
 

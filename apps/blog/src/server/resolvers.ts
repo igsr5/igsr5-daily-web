@@ -1,3 +1,5 @@
+import { DateTimeResolver } from 'graphql-scalars';
+
 import { Resolvers } from '../__generated__/gql/resolvers';
 import { getCategoryByPostId } from './db/category';
 import { getPost, getPosts, getPostsByCategoryId } from './db/post';
@@ -23,4 +25,5 @@ export const resolvers: Resolvers = {
     name: category => category.name,
     posts: async category => await getPostsByCategoryId(category.id),
   },
+  Date: DateTimeResolver,
 };

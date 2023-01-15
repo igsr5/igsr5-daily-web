@@ -3,10 +3,11 @@ import { IGraphQLConfig } from 'graphql-config';
 
 const codegenConfig: CodegenConfig = {
   overwrite: true,
-  schema: './src/schema.graphql',
+  schema: './src/graphql/schema.graphql',
   generates: {
     'src/__generated__/gql/': {
       preset: 'client',
+      documents: ['src/**/*.tsx'],
       plugins: [],
     },
     './graphql.schema.json': {
@@ -19,7 +20,7 @@ const codegenConfig: CodegenConfig = {
 };
 
 const config: IGraphQLConfig = {
-  schema: './src/schema.graphql',
+  schema: './src/graphql/schema.graphql',
   extensions: {
     codegen: codegenConfig,
   },

@@ -6,13 +6,15 @@ export const getPosts = async (opts: Partial<GetPostsOption>): Promise<Post[]> =
   const { limit, orderBy, offset } = opts;
   const prisma = new PrismaClient();
 
-  const orderByMap = {};
-  orderByMap[orderBy.field] = orderBy.order;
+  const orderByOption: Record<string, 'asc' | 'desc'> = {};
+  if (Boolean(orderBy)) {
+    orderByOption[orderBy.field] = orderBy.order;
+  }
 
   const posts = await prisma.post.findMany({
     take: limit,
     skip: offset,
-    orderBy: [orderByMap],
+    orderBy: orderByOption,
   });
   return posts;
 };

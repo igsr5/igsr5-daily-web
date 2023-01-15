@@ -1,17 +1,21 @@
+import { GetStaticProps, NextPage } from 'next';
+import { gql } from '@apollo/client';
 import { useTheme } from '@nextui-org/react';
 
+import { Post } from '../__generated__/gql/graphql';
 import AuthorSection from '../components/AuthorSection';
 import { MainHeader } from '../components/Header';
 import PostCard from '../components/PostCard';
 import SEO from '../components/SEO';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import useScrollRestoration from '../hooks/useScrollRestoration';
+import { getBackendApolloClient } from '../utils/backendApiClient';
 
 interface Props {
-  allPosts: PostType[];
+  allPosts: Post[];
 }
 
-function Blog({ allPosts }: Props) {
+const Page: NextPage<Props> = ({ allPosts }) => {
   const { theme } = useTheme();
   useScrollRestoration();
 
@@ -19,7 +23,7 @@ function Blog({ allPosts }: Props) {
     setTarget,
     elements: posts,
     isEnded,
-  } = useInfiniteScroll<PostType>({ fullElements: allPosts, offset: 12, rootMargin: '100px' });
+  } = useInfiniteScroll<Post>({ fullElements: allPosts, offset: 12, rootMargin: '100px' });
 
   return (
     <>
@@ -27,41 +31,47 @@ function Blog({ allPosts }: Props) {
       <MainHeader />
       <AuthorSection />
       <main>
-        {posts.map(({ slug, title, date, category, subtitle }) => (
-          <PostCard
-            key={slug}
-            slug={slug}
-            title={title}
-            subtitle={subtitle}
-            date={date}
-            category={category}
-            theme={theme}
-          />
+        {posts.map(post => (
+          <PostCard key={post.id} post={post} theme={theme} />
         ))}
 
         {!isEnded && <div ref={setTarget}></div>}
       </main>
     </>
   );
-}
+};
 
-export default Blog;
+export default Page;
 
-export async function getStaticProps() {
-  const posts: PostType[] = [
-    {
-      title: '2023-01-01',
-      date: '2023-01-01',
-      slug: '2023-01-01',
-      category: '2023-01',
-      content: '',
-      subtitle: '2023-01-01',
-    },
-  ];
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const apolloClient = await getBackendApolloClient();
+
+  const result = await apolloClient.query<{ posts: Post[] }>({
+    query: gql`
+      query getPosts {
+        posts(limit: 10, orderBy: { field: id, order: desc }) {
+          id
+          title
+          content
+          subtitle
+          published_at
+          category_id
+          category {
+            id
+            name
+          }
+        }
+      }
+    `,
+  });
+
+  const {
+    data: { posts },
+  } = result;
 
   return {
     props: {
       allPosts: posts,
     },
   };
-}
+};

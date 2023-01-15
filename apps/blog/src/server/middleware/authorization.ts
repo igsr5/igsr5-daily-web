@@ -4,7 +4,6 @@ import jwks from 'jwks-rsa';
 
 export const withAuthorization = (next: NextApiHandler) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    console.log(process.env.AUTH0_ISSUER);
     if (process.env.NODE_ENV === 'production') {
       try {
         // extract accessToken from req.headers

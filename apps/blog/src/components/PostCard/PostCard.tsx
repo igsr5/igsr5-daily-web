@@ -1,32 +1,29 @@
 import NextLink from 'next/link';
 import styled from '@emotion/styled';
-import { Link, NextUITheme, theme } from '@nextui-org/react';
+import { Link, NextUITheme } from '@nextui-org/react';
 
+import { Post } from '../../__generated__/gql/graphql';
 import DateAndCategoryLink from '../DateAndCategoryLink';
 
 interface Props {
-  slug: string;
-  title: string;
-  subtitle?: string;
-  date: string;
-  category?: string;
-  theme: typeof theme;
+  post: Post;
+  theme: NextUITheme;
 }
 
-function PostCard({ slug, title, subtitle, date, category, theme }: Props) {
+function PostCard({ post, theme }: Props) {
   return (
     <Article>
       <h3>
-        <NextLink href={`/${slug}`} passHref>
+        <NextLink href={`/${post.id}`} passHref>
           <Link underline css={{ color: theme.colors.text.value }}>
-            {title}
+            {post.title}
           </Link>
         </NextLink>
       </h3>
       <Small theme={theme}>
-        <DateAndCategoryLink date={date} category={category} />
+        <DateAndCategoryLink date={post.published_at} category={post.category.name} />
       </Small>
-      {subtitle && <P>{subtitle}</P>}
+      {post.subtitle && <P>{post.subtitle}</P>}
     </Article>
   );
 }

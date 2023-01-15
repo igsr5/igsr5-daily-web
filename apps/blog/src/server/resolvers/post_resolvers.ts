@@ -8,6 +8,10 @@ export const postResolvers: PostResolvers = {
   subtitle: post => post.subtitle,
   category_id: post => post.category_id,
   category: async post => {
-    return await categoryLoader.load(post.category_id);
+    if (post.category_id) {
+      return await categoryLoader.load(post.category_id);
+    }
+
+    return null;
   },
 };

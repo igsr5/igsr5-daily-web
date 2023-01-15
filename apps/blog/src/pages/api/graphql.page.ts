@@ -2,6 +2,7 @@ import fs from 'fs';
 import { createSchema, createYoga } from 'graphql-yoga';
 import path from 'path';
 
+import { withAuthorization } from '../../server/middleware/authorization';
 import { resolvers } from '../../server/resolvers';
 
 const typeDefs = fs.readFileSync(path.join(process.cwd(), 'src', 'schema.graphql'), 'utf8');
@@ -17,7 +18,9 @@ export const config = {
   },
 };
 
-export default createYoga({
+const yogaServer = createYoga({
   schema,
   graphqlEndpoint: '/api/graphql',
 });
+
+export default withAuthorization(yogaServer);

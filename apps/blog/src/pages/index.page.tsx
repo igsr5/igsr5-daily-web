@@ -17,6 +17,7 @@ export const getPostsQueryDocument = graphql(`
       subtitle
       published_at
       category {
+        id
         name
       }
     }
@@ -43,7 +44,7 @@ const Page: NextPage<Props> = ({ posts }) => {
             title={post.title}
             subtitle={post.subtitle}
             date={post.published_at}
-            categoryName={post.category.name}
+            category={post.category}
             theme={theme}
           />
         ))}

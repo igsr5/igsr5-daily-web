@@ -2,6 +2,7 @@ import NextLink from 'next/link';
 import styled from '@emotion/styled';
 import { Link, NextUITheme } from '@nextui-org/react';
 
+import { Category } from '../../__generated__/gql/graphql';
 import DateAndCategoryLink from '../DateAndCategoryLink';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
   title: string;
   date: string;
   subtitle?: string;
-  categoryName?: string;
+  category?: Category;
   theme: NextUITheme;
 }
 
@@ -24,7 +25,7 @@ function PostCard(props: Props) {
         </NextLink>
       </h3>
       <Small theme={props.theme}>
-        <DateAndCategoryLink date={props.date} category={props.categoryName} />
+        <DateAndCategoryLink date={props.date} category={props.category} />
       </Small>
       {props.subtitle && <P>{props.subtitle}</P>}
     </Article>

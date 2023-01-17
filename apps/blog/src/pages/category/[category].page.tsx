@@ -1,11 +1,31 @@
 import styled from '@emotion/styled';
 import { useTheme } from '@nextui-org/react';
 
-import { Post } from '../../__generated__/gql/graphql';
+import { graphql } from '../../__generated__/gql';
+import { GetAllCategoryIdsDocument, Post } from '../../__generated__/gql/graphql';
 import AuthorSection from '../../components/AuthorSection';
 import { MainHeader } from '../../components/Header';
 import PostCard from '../../components/PostCard';
 import SEO from '../../components/SEO';
+import { getBackendApolloClient } from '../../utils/backendApiClient';
+
+export const getAllCategoryIdsQueryDocument = graphql(`
+  query GetAllCategoryIds {
+    categories {
+      id
+    }
+  }
+`);
+
+export const getCategoryByIdQueryDocument = graphql(`
+  query GetCategoryById($category_id: Int!) {
+    category(id: $category_id) {
+      id
+      name
+      posts
+    }
+  }
+`);
 
 interface Props {
   category: string;
@@ -31,7 +51,7 @@ function EachCategory({ category, posts }: Props) {
             title={post.title}
             subtitle={post.subtitle}
             date={post.published_at}
-            categoryName={post.category.name}
+            category={post.category}
             theme={theme}
           />
         ))}
@@ -54,31 +74,17 @@ interface Paths {
   };
 }
 
-const categories = ['2023-01'];
-
 export async function getStaticPaths() {
+  const apolloClient = await getBackendApolloClient();
+  const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
+  const { data } = result;
+
   const paths: Paths[] = [];
-  categories.map(category => paths.push({ params: { category } }));
+  data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
+
   return { paths, fallback: 'blocking' };
 }
 
-export async function getStaticProps({ params }) {
-  const { category } = params;
-  if (!categories.includes(category)) {
-    return { notFound: true };
-  }
-  const postsInCategory = getAllPostsByCategory(category);
-
-  return { props: { category, allPosts: postsInCategory } };
-}
-const getAllPostsByCategory = (category: string) => {
-  return [
-    {
-      title: '2023-01-01',
-      date: '2023-01-01',
-      slug: '2023-01-01',
-      category: category,
-      content: '',
-    },
-  ];
-};
+// export async function getStaticProps({ params }) {
+//   return { props: { null, allPosts: [] } };
+// }

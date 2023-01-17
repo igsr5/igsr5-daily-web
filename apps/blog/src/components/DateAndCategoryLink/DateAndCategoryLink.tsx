@@ -1,9 +1,11 @@
 import NextLink from 'next/link';
 import { Link } from '@nextui-org/react';
 
+import { Category } from '../../__generated__/gql/graphql';
+
 interface Props {
   date: string;
-  category?: string;
+  category?: Category;
 }
 
 function DateAndCategoryLink({ date, category }: Props) {
@@ -14,8 +16,8 @@ function DateAndCategoryLink({ date, category }: Props) {
         <>
           {' '}
           at{' '}
-          <NextLink href={`/category/${category}`} passHref>
-            <Link color="primary">{category}</Link>
+          <NextLink href={`/category/${category.id}`} passHref>
+            <Link color="primary">{category.name}</Link>
           </NextLink>{' '}
           category
         </>

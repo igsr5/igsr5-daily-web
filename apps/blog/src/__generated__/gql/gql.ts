@@ -13,7 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-    "\n  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {\n    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {\n      id\n      title\n      subtitle\n      published_at\n      category {\n        name\n      }\n    }\n  }\n": types.GetPostsDocument,
+    "\n  query GetAllCategoryIds {\n    categories {\n      id\n    }\n  }\n": types.GetAllCategoryIdsDocument,
+    "\n  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {\n    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {\n      id\n      title\n      subtitle\n      published_at\n      category {\n        id\n        name\n      }\n    }\n  }\n": types.GetPostsDocument,
 };
 
 /**
@@ -33,7 +34,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {\n    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {\n      id\n      title\n      subtitle\n      published_at\n      category {\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {\n    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {\n      id\n      title\n      subtitle\n      published_at\n      category {\n        name\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query GetAllCategoryIds {\n    categories {\n      id\n    }\n  }\n"): (typeof documents)["\n  query GetAllCategoryIds {\n    categories {\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {\n    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {\n      id\n      title\n      subtitle\n      published_at\n      category {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {\n    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {\n      id\n      title\n      subtitle\n      published_at\n      category {\n        id\n        name\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

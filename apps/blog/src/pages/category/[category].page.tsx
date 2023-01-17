@@ -1,8 +1,9 @@
+import { GetStaticPaths, GetStaticProps } from 'next';
 import styled from '@emotion/styled';
 import { useTheme } from '@nextui-org/react';
 
 import { graphql } from '../../__generated__/gql';
-import { GetAllCategoryIdsDocument, Post } from '../../__generated__/gql/graphql';
+import { Category, GetAllCategoryIdsDocument, GetCategoryByIdDocument } from '../../__generated__/gql/graphql';
 import AuthorSection from '../../components/AuthorSection';
 import { MainHeader } from '../../components/Header';
 import PostCard from '../../components/PostCard';
@@ -22,29 +23,37 @@ export const getCategoryByIdQueryDocument = graphql(`
     category(id: $category_id) {
       id
       name
-      posts
+      posts {
+        id
+        title
+        subtitle
+        published_at
+        category {
+          id
+          name
+        }
+      }
     }
   }
 `);
 
 interface Props {
-  category: string;
-  posts: Post[];
+  category: Category;
 }
 
-function EachCategory({ category, posts }: Props) {
+function EachCategory({ category }: Props) {
   const { theme } = useTheme();
 
   return (
     <>
-      <SEO title={category} />
+      <SEO title={category.name} />
       <MainHeader />
       <AuthorSection />
       <H2>
-        Posts in <strong>{category}</strong> category
+        Posts in <strong>{category.name}</strong> category
       </H2>
       <main>
-        {posts.map(post => (
+        {category.posts.map(post => (
           <PostCard
             key={post.id}
             postId={post.id}
@@ -74,7 +83,7 @@ interface Paths {
   };
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const apolloClient = await getBackendApolloClient();
   const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
   const { data } = result;
@@ -83,8 +92,18 @@ export async function getStaticPaths() {
   data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
 
   return { paths, fallback: 'blocking' };
-}
+};
 
-// export async function getStaticProps({ params }) {
-//   return { props: { null, allPosts: [] } };
-// }
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const apolloClient = await getBackendApolloClient();
+  const { data } = await apolloClient.query({
+    query: GetCategoryByIdDocument,
+    variables: {
+      category_id: Number(params.category),
+    },
+  });
+
+  const category = data.category;
+
+  return { props: { category } };
+};

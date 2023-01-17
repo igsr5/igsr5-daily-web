@@ -25,7 +25,7 @@ export const getPostsQueryDocument = graphql(`
 `);
 
 interface Props {
-  posts: Array<Omit<Post, 'content'>>;
+  posts: Post[];
 }
 
 const Page: NextPage<Props> = ({ posts }) => {

@@ -24,6 +24,30 @@ export const getPostsQueryDocument = graphql(`
   }
 `);
 
+export const getAllPostIdsQueryDocument = graphql(`
+  query GetAllPostIds {
+    posts {
+      id
+    }
+  }
+`);
+
+export const getPostQueryDocument = graphql(`
+  query GetPost($post_id: Int!) {
+    post(id: $post_id) {
+      id
+      title
+      content
+      subtitle
+      published_at
+      category {
+        id
+        name
+      }
+    }
+  }
+`);
+
 interface Props {
   posts: Post[];
 }

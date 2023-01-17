@@ -1,7 +1,9 @@
+import { GetStaticPaths, GetStaticProps } from 'next';
 import styled from '@emotion/styled';
 import { NextUITheme, useTheme } from '@nextui-org/react';
 import { PageProgressBar } from 'core';
 
+import { GetAllPostIdsDocument, GetPostDocument, Post } from '../__generated__/gql/graphql';
 import AuthorSection from '../components/AuthorSection';
 import Comments from '../components/Comments';
 import DateAndCategoryLink from '../components/DateAndCategoryLink';
@@ -9,30 +11,26 @@ import { PostHeader } from '../components/Header';
 import SEO from '../components/SEO';
 import TOC from '../components/TOC';
 import markdownToHtml from '../libs/markdownToHtml';
+import { getBackendApolloClient } from '../utils/backendApiClient';
 
 interface Props {
-  title: string;
-  subtitle: string;
-  category: string;
-  date: string;
-  content: string;
-  ogImage: string | null;
+  post: Post;
 }
 
-function Post({ title, subtitle, category, date, content, ogImage }: Props) {
+function Post({ post }: Props) {
   const { theme } = useTheme();
 
   return (
     <>
-      <SEO title={title} description={subtitle} ogImage={ogImage} />
+      <SEO title={post.title} description={post.subtitle} />
       <PostHeader />
       <TOC />
       <Main>
-        <H1>{title}</H1>
+        <H1>{post.title}</H1>
         <P theme={theme}>
-          <DateAndCategoryLink date={date} category={category} />
+          <DateAndCategoryLink date={post.published_at} category={post.category} />
         </P>
-        <article dangerouslySetInnerHTML={{ __html: content }}></article>
+        <article dangerouslySetInnerHTML={{ __html: post.content }}></article>
       </Main>
       <AuthorSection hasKbarButton />
       <Comments />
@@ -64,42 +62,29 @@ interface Paths {
   };
 }
 
-export async function getStaticPaths() {
-  const allPosts: PostType[] = [
-    {
-      title: '2023-01-01',
-      date: '2023-01-01',
-      slug: '2023-01-01',
-      category: '2023-01-01',
-      content: '',
-      subtitle: '2023-01-01',
-    },
-  ];
+export const getStaticPaths: GetStaticPaths = async () => {
+  const apolloClient = await getBackendApolloClient();
+  const { data } = await apolloClient.query({ query: GetAllPostIdsDocument });
 
   const paths: Paths[] = [];
-  allPosts.map(post => paths.push({ params: { slug: post.slug } }));
+  data.posts.map(post => paths.push({ params: { slug: post.id.toString() } }));
   return { paths, fallback: 'blocking' };
-}
+};
 
-export async function getStaticProps() {
-  const currentPost: PostType = {
-    title: '2023-01-01',
-    date: '2023-01-01',
-    slug: '2023-01-01',
-    category: '2023-01-01',
-    content: '',
-    subtitle: '2023-01-01',
-  };
-
-  const content = await markdownToHtml(currentPost.content);
-
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const apolloClient = await getBackendApolloClient();
+  const { data } = await apolloClient.query({ query: GetPostDocument, variables: { post_id: Number(params.slug) } });
+  const content = await markdownToHtml(data.post.content);
   return {
     props: {
-      title: currentPost.title,
-      subtitle: currentPost.subtitle ?? null,
-      category: currentPost.category,
-      date: currentPost.date,
-      content,
+      post: {
+        id: data.post.id,
+        title: data.post.title,
+        subtitle: data.post.subtitle,
+        category: data.post.category,
+        published_at: data.post.published_at,
+        content: content,
+      },
     },
   };
-}
+};

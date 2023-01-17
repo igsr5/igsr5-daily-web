@@ -3,14 +3,13 @@ import styled from '@emotion/styled';
 import { NextUITheme, useTheme } from '@nextui-org/react';
 import { PageProgressBar } from 'core';
 
-import { GetAllPostIdsDocument, Post } from '../__generated__/gql/graphql';
+import { Post } from '../__generated__/gql/graphql';
 import AuthorSection from '../components/AuthorSection';
 import Comments from '../components/Comments';
 import DateAndCategoryLink from '../components/DateAndCategoryLink';
 import { PostHeader } from '../components/Header';
 import SEO from '../components/SEO';
 import TOC from '../components/TOC';
-import { getBackendApolloClient } from '../utils/backendApiClient';
 
 interface Props {
   post: Post;
@@ -80,7 +79,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
         id: 1,
         title: '',
         subtitle: '',
-        published_at: new Date(),
+        published_at: new Date().toString(),
         content: '',
       },
     },

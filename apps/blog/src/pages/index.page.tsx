@@ -102,7 +102,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
           id: 1,
           title: '',
           subtitle: '',
-          published_at: new Date(),
+          published_at: new Date().toString(),
         },
       ],
     },

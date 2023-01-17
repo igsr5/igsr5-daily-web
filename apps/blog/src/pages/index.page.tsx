@@ -2,12 +2,11 @@ import { GetStaticProps, NextPage } from 'next';
 import { useTheme } from '@nextui-org/react';
 
 import { graphql } from '../__generated__/gql';
-import { AllowOrderField, GetPostsDocument, Post, Sort } from '../__generated__/gql/graphql';
+import { Post } from '../__generated__/gql/graphql';
 import AuthorSection from '../components/AuthorSection';
 import { MainHeader } from '../components/Header';
 import PostCard from '../components/PostCard';
 import SEO from '../components/SEO';
-import { getBackendApolloClient } from '../utils/backendApiClient';
 
 export const getPostsQueryDocument = graphql(`
   query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {
@@ -80,25 +79,32 @@ const Page: NextPage<Props> = ({ posts }) => {
 export default Page;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const apolloClient = await getBackendApolloClient();
+  // const apolloClient = await getBackendApolloClient();
 
-  const result = await apolloClient.query({
-    query: GetPostsDocument,
-    variables: {
-      orderBy: {
-        order: Sort.Desc,
-        field: AllowOrderField.PublishedAt,
-      },
-    },
-  });
+  // const result = await apolloClient.query({
+  //   query: GetPostsDocument,
+  //   variables: {
+  //     orderBy: {
+  //       order: Sort.Desc,
+  //       field: AllowOrderField.PublishedAt,
+  //     },
+  //   },
+  // });
 
-  const {
-    data: { posts },
-  } = result;
+  // const {
+  //   data: { posts },
+  // } = result;
 
   return {
     props: {
-      posts: posts,
+      posts: [
+        {
+          id: 1,
+          title: '',
+          subtitle: '',
+          published_at: new Date(),
+        },
+      ],
     },
   };
 };

@@ -1,23 +1,19 @@
 import styled from '@emotion/styled';
 import { useTheme } from '@nextui-org/react';
 
+import { Post } from '../../__generated__/gql/graphql';
 import AuthorSection from '../../components/AuthorSection';
 import { MainHeader } from '../../components/Header';
 import PostCard from '../../components/PostCard';
 import SEO from '../../components/SEO';
-import useInfiniteScroll from '../../hooks/useInfiniteScroll';
-import useScrollRestoration from '../../hooks/useScrollRestoration';
 
 interface Props {
   category: string;
-  allPosts: PostType[];
+  posts: Post[];
 }
 
-function EachCategory({ category, allPosts }: Props) {
+function EachCategory({ category, posts }: Props) {
   const { theme } = useTheme();
-  useScrollRestoration();
-
-  const { setTarget, elements: posts, isEnded } = useInfiniteScroll<PostType>({ offset: 12, fullElements: allPosts });
 
   return (
     <>
@@ -28,10 +24,17 @@ function EachCategory({ category, allPosts }: Props) {
         Posts in <strong>{category}</strong> category
       </H2>
       <main>
-        {posts.map(({ slug, title, subtitle, date }) => (
-          <PostCard key={slug} slug={slug} title={title} subtitle={subtitle} date={date} theme={theme} />
+        {posts.map(post => (
+          <PostCard
+            key={post.id}
+            postId={post.id}
+            title={post.title}
+            subtitle={post.subtitle}
+            date={post.published_at}
+            categoryName={post.category.name}
+            theme={theme}
+          />
         ))}
-        {!isEnded && <div ref={setTarget}></div>}
       </main>
     </>
   );

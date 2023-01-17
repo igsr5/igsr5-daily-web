@@ -1,25 +1,59 @@
+import { GetStaticProps, NextPage } from 'next';
 import { useTheme } from '@nextui-org/react';
 
+import { graphql } from '../__generated__/gql';
+import { AllowOrderField, GetPostsDocument, Post, Sort } from '../__generated__/gql/graphql';
 import AuthorSection from '../components/AuthorSection';
 import { MainHeader } from '../components/Header';
 import PostCard from '../components/PostCard';
 import SEO from '../components/SEO';
-import useInfiniteScroll from '../hooks/useInfiniteScroll';
-import useScrollRestoration from '../hooks/useScrollRestoration';
+import { getBackendApolloClient } from '../utils/backendApiClient';
+
+export const getPostsQueryDocument = graphql(`
+  query getPosts($limit: Int, $offset: Int, $orderBy: OrderByInputForPost) {
+    posts(limit: $limit, offset: $offset, orderBy: $orderBy) {
+      id
+      title
+      subtitle
+      published_at
+      category {
+        id
+        name
+      }
+    }
+  }
+`);
+
+export const getAllPostIdsQueryDocument = graphql(`
+  query GetAllPostIds {
+    posts {
+      id
+    }
+  }
+`);
+
+export const getPostQueryDocument = graphql(`
+  query GetPost($post_id: Int!) {
+    post(id: $post_id) {
+      id
+      title
+      content
+      subtitle
+      published_at
+      category {
+        id
+        name
+      }
+    }
+  }
+`);
 
 interface Props {
-  allPosts: PostType[];
+  posts: Post[];
 }
 
-function Blog({ allPosts }: Props) {
+const Page: NextPage<Props> = ({ posts }) => {
   const { theme } = useTheme();
-  useScrollRestoration();
-
-  const {
-    setTarget,
-    elements: posts,
-    isEnded,
-  } = useInfiniteScroll<PostType>({ fullElements: allPosts, offset: 12, rootMargin: '100px' });
 
   return (
     <>
@@ -27,41 +61,44 @@ function Blog({ allPosts }: Props) {
       <MainHeader />
       <AuthorSection />
       <main>
-        {posts.map(({ slug, title, date, category, subtitle }) => (
+        {posts.map(post => (
           <PostCard
-            key={slug}
-            slug={slug}
-            title={title}
-            subtitle={subtitle}
-            date={date}
-            category={category}
+            key={post.id}
+            postId={post.id}
+            title={post.title}
+            subtitle={post.subtitle}
+            date={post.published_at}
+            category={post.category}
             theme={theme}
           />
         ))}
-
-        {!isEnded && <div ref={setTarget}></div>}
       </main>
     </>
   );
-}
+};
 
-export default Blog;
+export default Page;
 
-export async function getStaticProps() {
-  const posts: PostType[] = [
-    {
-      title: '2023-01-01',
-      date: '2023-01-01',
-      slug: '2023-01-01',
-      category: '2023-01',
-      content: '',
-      subtitle: '2023-01-01',
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const apolloClient = await getBackendApolloClient();
+
+  const result = await apolloClient.query({
+    query: GetPostsDocument,
+    variables: {
+      orderBy: {
+        order: Sort.Desc,
+        field: AllowOrderField.PublishedAt,
+      },
     },
-  ];
+  });
+
+  const {
+    data: { posts },
+  } = result;
 
   return {
     props: {
-      allPosts: posts,
+      posts: posts,
     },
   };
-}
+};

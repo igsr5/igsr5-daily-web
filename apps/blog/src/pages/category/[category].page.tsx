@@ -1,37 +1,69 @@
+import { GetStaticPaths, GetStaticProps } from 'next';
 import styled from '@emotion/styled';
 import { useTheme } from '@nextui-org/react';
 
+import { graphql } from '../../__generated__/gql';
+import { Category, GetAllCategoryIdsDocument, GetCategoryByIdDocument } from '../../__generated__/gql/graphql';
 import AuthorSection from '../../components/AuthorSection';
 import { MainHeader } from '../../components/Header';
 import PostCard from '../../components/PostCard';
 import SEO from '../../components/SEO';
-import useInfiniteScroll from '../../hooks/useInfiniteScroll';
-import useScrollRestoration from '../../hooks/useScrollRestoration';
+import { getBackendApolloClient } from '../../utils/backendApiClient';
+
+export const getAllCategoryIdsQueryDocument = graphql(`
+  query GetAllCategoryIds {
+    categories {
+      id
+    }
+  }
+`);
+
+export const getCategoryByIdQueryDocument = graphql(`
+  query GetCategoryById($category_id: Int!) {
+    category(id: $category_id) {
+      id
+      name
+      posts {
+        id
+        title
+        subtitle
+        published_at
+        category {
+          id
+          name
+        }
+      }
+    }
+  }
+`);
 
 interface Props {
-  category: string;
-  allPosts: PostType[];
+  category: Category;
 }
 
-function EachCategory({ category, allPosts }: Props) {
+function EachCategory({ category }: Props) {
   const { theme } = useTheme();
-  useScrollRestoration();
-
-  const { setTarget, elements: posts, isEnded } = useInfiniteScroll<PostType>({ offset: 12, fullElements: allPosts });
 
   return (
     <>
-      <SEO title={category} />
+      <SEO title={category.name} />
       <MainHeader />
       <AuthorSection />
       <H2>
-        Posts in <strong>{category}</strong> category
+        Posts in <strong>{category.name}</strong> category
       </H2>
       <main>
-        {posts.map(({ slug, title, subtitle, date }) => (
-          <PostCard key={slug} slug={slug} title={title} subtitle={subtitle} date={date} theme={theme} />
+        {category.posts.map(post => (
+          <PostCard
+            key={post.id}
+            postId={post.id}
+            title={post.title}
+            subtitle={post.subtitle}
+            date={post.published_at}
+            category={post.category}
+            theme={theme}
+          />
         ))}
-        {!isEnded && <div ref={setTarget}></div>}
       </main>
     </>
   );
@@ -51,31 +83,29 @@ interface Paths {
   };
 }
 
-const categories = ['2023-01'];
+export const getStaticPaths: GetStaticPaths = async () => {
+  const apolloClient = await getBackendApolloClient();
+  const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
+  const { data } = result;
 
-export async function getStaticPaths() {
   const paths: Paths[] = [];
-  categories.map(category => paths.push({ params: { category } }));
-  return { paths, fallback: 'blocking' };
-}
-
-export async function getStaticProps({ params }) {
-  const { category } = params;
-  if (!categories.includes(category)) {
-    return { notFound: true };
+  if (data.categories) {
+    data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
   }
-  const postsInCategory = getAllPostsByCategory(category);
 
-  return { props: { category, allPosts: postsInCategory } };
-}
-const getAllPostsByCategory = (category: string) => {
-  return [
-    {
-      title: '2023-01-01',
-      date: '2023-01-01',
-      slug: '2023-01-01',
-      category: category,
-      content: '',
+  return { paths, fallback: 'blocking' };
+};
+
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const apolloClient = await getBackendApolloClient();
+  const { data } = await apolloClient.query({
+    query: GetCategoryByIdDocument,
+    variables: {
+      category_id: Number(params.category),
     },
-  ];
+  });
+
+  const category = data.category;
+
+  return { props: { category } };
 };

@@ -60,7 +60,7 @@ export type Post = {
   __typename?: 'Post';
   category?: Maybe<Category>;
   category_id?: Maybe<Scalars['Int']>;
-  content: Scalars['String'];
+  content?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   published_at: Scalars['DateTime'];
   subtitle?: Maybe<Scalars['String']>;
@@ -216,7 +216,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   category?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
   category_id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   published_at?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   subtitle?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

@@ -1,15 +1,9 @@
 import { Category, PrismaClient } from '@prisma/client';
 
-type GetCategoriesOption = { in: { ids: number[] } };
-export const getCategories = async (opts?: Partial<GetCategoriesOption>) => {
+export const getCategories = async () => {
   const prisma = new PrismaClient();
-  const categories = await prisma.category.findMany({
-    where: {
-      id: {
-        in: opts.in.ids,
-      },
-    },
-  });
+
+  const categories = await prisma.category.findMany({});
   return categories;
 };
 

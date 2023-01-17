@@ -52,7 +52,7 @@ type Post {
   id: Int!
   title: String!
   subtitle: String
-  content: String!
+  content: String
   category_id: Int
   category: Category
   published_at: DateTime!

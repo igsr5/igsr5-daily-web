@@ -88,7 +88,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
   const { data } = result;
 
-  const paths: Paths[] = [{ params: { category: 'hoge' } }];
+  const paths: Paths[] = [];
   if (data.categories) {
     data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
   }

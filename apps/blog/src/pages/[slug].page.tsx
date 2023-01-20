@@ -66,7 +66,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const apolloClient = await getBackendApolloClient();
   const { data } = await apolloClient.query({ query: GetAllPostIdsDocument });
 
-  const paths: Paths[] = [{ params: { slug: 'hoge' } }];
+  const paths: Paths[] = [];
   data.posts.map(post => paths.push({ params: { slug: post.id.toString() } }));
   return { paths, fallback: 'blocking' };
 };

@@ -10,7 +10,7 @@ const nextConfig = {
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
 };
 
-module.exports = withTM({
+const moduleExports = withTM({
   webpack(config) {
     const plugins = [...config.plugins, new CompressionPlugin()];
     return { ...config, plugins };

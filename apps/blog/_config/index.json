@@ -1,7 +1,7 @@
 {
   "blogName": "igsr5 daily",
   "blogDescription": "This site is igsr5's daily reports.",
-  "blogRepo": "",
-  "blogUrl": "https://comet-land-blog.vercel.app",
-  "resumeUrl": "https://comet-land-resume.vercel.app"
+  "blogRepo": "https://github.com/igsr5/igsr5-daily-web",
+  "blogUrl": "https://daily.igsr5.com",
+  "resumeUrl": "https://igsr5.dev"
 }

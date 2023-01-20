@@ -27,16 +27,7 @@ function generateKbarAction(router: NextRouter) {
     };
   });
 
-  const rssFeedAction: IconActionType = {
-    id: 'rss',
-    name: 'RSS',
-    section: 'Scope',
-    shortcut: [],
-    keywords: 'rss, feed',
-    perform: () => openExternalLink(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/rss.xml`),
-  };
-
-  const kbarActions: IconActionType[] = [...routePostActions, ...routeCategoryActions, rssFeedAction, ...socialActions];
+  const kbarActions: IconActionType[] = [...routePostActions, ...routeCategoryActions, ...socialActions];
 
   const resumeAction: IconActionType = {
     id: 'resume',

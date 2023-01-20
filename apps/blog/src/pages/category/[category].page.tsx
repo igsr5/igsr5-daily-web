@@ -3,11 +3,12 @@ import styled from '@emotion/styled';
 import { useTheme } from '@nextui-org/react';
 
 import { graphql } from '../../__generated__/gql';
-import { Category } from '../../__generated__/gql/graphql';
+import { Category, GetAllCategoryIdsDocument, GetCategoryByIdDocument } from '../../__generated__/gql/graphql';
 import AuthorSection from '../../components/AuthorSection';
 import { MainHeader } from '../../components/Header';
 import PostCard from '../../components/PostCard';
 import SEO from '../../components/SEO';
+import { getBackendApolloClient } from '../../utils/backendApiClient';
 
 export const getAllCategoryIdsQueryDocument = graphql(`
   query GetAllCategoryIds {
@@ -83,28 +84,28 @@ interface Paths {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const apolloClient = await getBackendApolloClient();
-  // const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
-  // const { data } = result;
+  const apolloClient = await getBackendApolloClient();
+  const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
+  const { data } = result;
 
   const paths: Paths[] = [{ params: { category: 'hoge' } }];
-  // if (data.categories) {
-  //   data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
-  // }
+  if (data.categories) {
+    data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
+  }
 
   return { paths, fallback: 'blocking' };
 };
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  // const apolloClient = await getBackendApolloClient();
-  // const { data } = await apolloClient.query({
-  //   query: GetCategoryByIdDocument,
-  //   variables: {
-  //     category_id: Number(params.category),
-  //   },
-  // });
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  const apolloClient = await getBackendApolloClient();
+  const { data } = await apolloClient.query({
+    query: GetCategoryByIdDocument,
+    variables: {
+      category_id: Number(params.category),
+    },
+  });
 
-  // const category = data.category;
+  const category = data.category;
 
-  return { props: { category: { name: '', id: 1, posts: [] } } };
+  return { props: { category } };
 };

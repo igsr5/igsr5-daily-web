@@ -9,9 +9,11 @@ interface Props {
 }
 
 function DateAndCategoryLink({ date, category }: Props) {
+  const dateObj = new Date(date);
+  const formattedDate = `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()}`;
   return (
     <>
-      {date}
+      {formattedDate}
       {category && (
         <>
           {' '}

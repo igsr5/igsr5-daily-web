@@ -28,5 +28,5 @@ export const serializeCategory = (category: DBCategory | null) => {
 export const calculateCategoryName = (publishedAt: Date) => {
   const year = publishedAt.getFullYear();
   const month = publishedAt.getMonth() + 1;
-  return `${year}-${month}`;
+  return `reports of ${year}/${month}`;
 };

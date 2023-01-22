@@ -1,29 +1,33 @@
 import styled from '@emotion/styled';
 import { Avatar, Link } from '@nextui-org/react';
 import { KBarToggleButton } from 'core';
-import { authorImage, authorName, defaultUrl } from 'core/constants';
-
-import { blogDescription } from '../../../_config';
+import { defaultUrl } from 'core/constants';
 
 interface Props {
   marginBottom?: string;
   hasKbarButton?: boolean;
 }
 
+const authorSectionData = {
+  avatar: 'https://res.cloudinary.com/drb9hgnv3/image/upload/v1674376091/84hsaKr_agrvab.png',
+  name: 'Sora Ichigo',
+  blogDescription: 'This blog summarizes my daily reflections.',
+};
+
 function AuthorSection({ marginBottom = '3.5rem', hasKbarButton = false }: Props) {
   return (
     <Section style={{ marginBottom }}>
       <Div>
-        <Avatar src={authorImage.default.src} alt={authorName} text={authorName} size="xl" />
+        <Avatar src={authorSectionData.avatar} alt={authorSectionData.name} text={authorSectionData.name} size="xl" />
         <TextWrapper>
           <H2>
             Personal blog by{' '}
             <Link href={defaultUrl} target="_blank" rel="noreferrer" color="primary">
-              {authorName}
+              {authorSectionData.name}
             </Link>
             .
           </H2>
-          <p>{blogDescription}</p>
+          <p>{authorSectionData.blogDescription}</p>
         </TextWrapper>
       </Div>
 

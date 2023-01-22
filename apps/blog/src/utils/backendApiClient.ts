@@ -36,16 +36,19 @@ const getBackendApiAccessToken = async () => {
   return access_token;
 };
 
+let backendApiClient: ApolloClient<any> | null = null;
+
 export const getBackendApolloClient = async () => {
-  const accessToken = await getBackendApiAccessToken();
+  if (!backendApiClient) {
+    const accessToken = await getBackendApiAccessToken();
+    backendApiClient = new ApolloClient({
+      uri: process.env.BACKEND_API_URL,
+      cache: new InMemoryCache(),
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
 
-  const apolloClient = new ApolloClient({
-    uri: process.env.BACKEND_API_URL,
-    cache: new InMemoryCache(),
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  return apolloClient;
+  return backendApiClient;
 };

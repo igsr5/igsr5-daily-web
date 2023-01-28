@@ -1,9 +1,9 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import styled from '@emotion/styled';
 import { useTheme } from '@nextui-org/react';
 
 import { graphql } from '../../__generated__/gql';
-import { Category, GetAllCategoryIdsDocument, GetCategoryByIdDocument } from '../../__generated__/gql/graphql';
+import { Category, GetCategoryByIdDocument } from '../../__generated__/gql/graphql';
 import AuthorSection from '../../components/AuthorSection';
 import { MainHeader } from '../../components/Header';
 import PostCard from '../../components/PostCard';
@@ -77,26 +77,26 @@ const H2 = styled.h2`
   margin-bottom: 1.5rem;
 `;
 
-interface Paths {
-  params: {
-    category: string;
-  };
-}
+// interface Paths {
+//   params: {
+//     category: string;
+//   };
+// }
+//
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const apolloClient = await getBackendApolloClient();
+//   const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
+//   const { data } = result;
+//
+//   const paths: Paths[] = [];
+//   if (data.categories) {
+//     data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
+//   }
+//
+//   return { paths, fallback: 'blocking' };
+// };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const apolloClient = await getBackendApolloClient();
-  const result = await apolloClient.query({ query: GetAllCategoryIdsDocument });
-  const { data } = result;
-
-  const paths: Paths[] = [];
-  if (data.categories) {
-    data.categories.map(category => paths.push({ params: { category: category.id.toString() } }));
-  }
-
-  return { paths, fallback: 'blocking' };
-};
-
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
   const apolloClient = await getBackendApolloClient();
   const { data } = await apolloClient.query({
     query: GetCategoryByIdDocument,
@@ -107,5 +107,5 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 
   const category = data.category;
 
-  return { props: { category }, revalidate: 10 };
+  return { props: { category } };
 };

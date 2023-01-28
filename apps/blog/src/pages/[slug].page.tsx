@@ -1,9 +1,9 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import styled from '@emotion/styled';
 import { NextUITheme, useTheme } from '@nextui-org/react';
 import { PageProgressBar } from 'core';
 
-import { GetAllPostIdsDocument, GetPostDocument, Post } from '../__generated__/gql/graphql';
+import { GetPostDocument, Post } from '../__generated__/gql/graphql';
 import AuthorSection from '../components/AuthorSection';
 import Comments from '../components/Comments';
 import DateAndCategoryLink from '../components/DateAndCategoryLink';
@@ -56,22 +56,22 @@ const P = styled.p<{ theme: NextUITheme | undefined }>`
   color: ${({ theme }) => theme.colors.accents6.value};
 `;
 
-interface Paths {
-  params: {
-    slug: string;
-  };
-}
+// interface Paths {
+//   params: {
+//     slug: string;
+//   };
+// }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const apolloClient = await getBackendApolloClient();
-  const { data } = await apolloClient.query({ query: GetAllPostIdsDocument });
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const apolloClient = await getBackendApolloClient();
+//   const { data } = await apolloClient.query({ query: GetAllPostIdsDocument });
+//
+//   const paths: Paths[] = [];
+//   data.posts.map(post => paths.push({ params: { slug: post.id.toString() } }));
+//   return { paths, fallback: 'blocking' };
+// };
 
-  const paths: Paths[] = [];
-  data.posts.map(post => paths.push({ params: { slug: post.id.toString() } }));
-  return { paths, fallback: 'blocking' };
-};
-
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
   const apolloClient = await getBackendApolloClient();
   const { data } = await apolloClient.query({ query: GetPostDocument, variables: { post_id: Number(params.slug) } });
   const content = await markdownToHtml(data.post.content);
@@ -85,6 +85,5 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
         content: content,
       },
     },
-    revalidate: 10,
   };
 };

@@ -1,4 +1,4 @@
-import { GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { useTheme } from '@nextui-org/react';
 
 import { graphql } from '../__generated__/gql';
@@ -79,7 +79,7 @@ const Page: NextPage<Props> = ({ posts }) => {
 
 export default Page;
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const apolloClient = await getBackendApolloClient();
 
   const result = await apolloClient.query({
@@ -100,6 +100,5 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     props: {
       posts,
     },
-    revalidate: 10,
   };
 };
